@@ -46,7 +46,7 @@ function itemUpdate(e) {
   const playerDiv = team.children[playerId].querySelector('.player-event')
 
   const levelContainer = playerDiv.querySelector('.item')
-  // const sponsorImage = playerDiv.querySelector('.sponsor')
+  // const partnerImage = playerDiv.querySelector('.partner')
 
   if (
     playerDiv.classList.contains('levelUp') ||
@@ -57,7 +57,7 @@ function itemUpdate(e) {
     }, 3000)
   }
 
-  // sponsorImage.src = "/pages/op-plugin-theming/active/turniej/logo5.png";
+  // partnerImage.src = '/pages/op-plugin-theming/active/turniej/logo5.png';
   levelContainer.src = `/serve/module-league-static/img/item/${e.item}.png`
   playerDiv.classList.add('itemBuy')
   setTimeout(() => {
@@ -429,6 +429,9 @@ const sbBlueScore = scoreboard.querySelector('.sb-score-blue')
 const sbRedScore = scoreboard.querySelector('.sb-score-red')
 
 function changeColors(e) {
+  teams[100] = e.teams.blueTeam;
+  teams[200] = e.teams.redTeam;
+
   sbBlueTag.innerText = e.teams.blueTeam?.tag || 'Tag'
   sbRedTag.innerText = e.teams.redTeam?.tag || 'Tag'
   sbBlueLogo.style.visibility = `hidden`
@@ -514,6 +517,18 @@ function changeColors(e) {
   }
 }
 
+const eventDiv = document.querySelector('#event')
+const teams = {
+  100: {
+    tag: '',
+    name: '',
+  },
+  200: {
+    tag: '',
+    name: '',
+  },
+};
+
 let hasEvent = false
 function emitEvent(e) {
   if (showLeaderBoard) return
@@ -525,19 +540,40 @@ function emitEvent(e) {
   }
 
   hasEvent = true
-  const eventDiv =
-    e.team === 100
-      ? blueTeam.querySelector('.event')
-      : redTeam.querySelector('.event')
 
-  const eventName = eventDiv.querySelector('.event-name')
+  const eventName = eventDiv.querySelector('.name')
   eventName.querySelector('span').innerText = e.name
-  eventDiv.querySelector('.event-time').innerText = `AT ${convertSecsToTime(
+  eventDiv.querySelector('.time').innerText = `AT ${convertSecsToTime(
     e.time
   )}`
-  eventDiv.querySelector('.event-img').src = `img/${e.type.toLowerCase()}.png`
+  eventDiv.querySelector('.partner').src =
+    e.type === 'Baron'
+      ? `/pages/op-plugin-theming/active/turniej/logo8.png`
+      : e.type === 'Herald'
+      ? `/pages/op-plugin-theming/active/turniej/logo7.png`
+      : `/pages/op-plugin-theming/active/turniej/logo6.png`;
+  eventDiv.querySelector('.by').textContent = teams[e.team]?.name;
+
+  const canvas = eventDiv.querySelector('canvas');
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  const video = eventDiv.querySelector('video');
+  video.src = `/pages/op-plugin-theming/active/events/${e.type.toLowerCase()}.webm`;
+  video.addEventListener('play', function () {
+    const $this = this;
+    (function loop() {
+        if (!$this.paused && !$this.ended) {
+          const ratio = (canvas.width / video.videoWidth) * video.videoHeight;
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage($this, -canvas.width * 0.3, 0, canvas.width * 1.5, ratio * 1.5);
+          setTimeout(loop, 1000 / 30);
+        }
+    })();
+  }, 0);
+
 
   eventDiv.classList.add(e.type.toLowerCase(), 'show')
+  video.play()
 
   setTimeout(() => {
     eventDiv.classList.remove('show')
@@ -891,21 +927,21 @@ LPTE.onready(async () => {
     }
   })
   LPTE.on('module-league-in-game', 'test-event', (e) => {
-    if (e.team === 100) {
+    const options = [
+      'Cloud',
+      'Hextech',
+      'Chemtech',
+      'Ocean',
+      'Infernal',
+      'Mountain',
+      'Elder',
+    ];
       emitEvent({
-        team: 100,
+        team: e.team,
         name: e.event,
         time: 160000,
-        type: e.event === 'Dragon' ? 'cloud' : e.event
+        type: e.event === 'Dragon' ? options[Math.floor(Math.random() * options.length)] : e.event
       })
-    } else if (e.team === 200) {
-      emitEvent({
-        team: 200,
-        name: e.event,
-        time: 160000,
-        type: e.event === 'Dragon' ? 'cloud' : e.event
-      })
-    }
   })
   LPTE.on('module-league-in-game', 'test-killfeed', (e) => {
     if (e.team === 100) {
