@@ -48,6 +48,7 @@ function itemUpdate(e) {
   const playerDiv = team.children[playerId].querySelector(".player-event");
 
   const levelContainer = playerDiv.querySelector(".item");
+  // const sponsorImage = playerDiv.querySelector('.sponsor')
 
   if (
     playerDiv.classList.contains("levelUp") ||
@@ -58,6 +59,7 @@ function itemUpdate(e) {
     }, 3000);
   }
 
+  // sponsorImage.src = "/pages/op-plugin-theming/active/turniej/logo5.png";
   levelContainer.src = `/serve/module-league-static/img/item/${e.item}.png`;
   playerDiv.classList.add("itemBuy");
   setTimeout(() => {
