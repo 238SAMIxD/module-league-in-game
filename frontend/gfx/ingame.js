@@ -429,18 +429,18 @@ function changeColor(color) {
   return brightness < 150 ? "--text-color" : "--text-color-dark";
 }
 
-const sbBlueScore = scoreboard.querySelector(".sb-score-blue");
-const sbRedScore = scoreboard.querySelector(".sb-score-red");
-const tournamentDiv = document.querySelector("#tournament");
-const roundOfSpan = tournamentDiv.querySelector(".phase");
-const nameSpan = tournamentDiv.querySelector(".name");
+const sbBlueScore = scoreboard.querySelector('.sb-score-blue')
+const sbRedScore = scoreboard.querySelector('.sb-score-red')
+const tournamentDiv = document.querySelector('#tournament')
+const roundOfSpan = tournamentDiv.querySelector('.phase')
+const nameSpan = tournamentDiv.querySelector('.name')
 const roundOfMap = {
-  0: "Upper Bracket Final",
-  1: "Upper Bracket Final",
-  2: "Finals",
-  4: "Semi Finals",
-  8: "Quarter Finals",
-};
+  0: 'Wielki Finał',
+  1: 'Mały Finał',
+  2: 'Finał',
+  4: 'Półfinał',
+  8: 'Ćwierćfinał'
+}
 
 function changeColors(e) {
   teams[100] = e.teams.blueTeam;
@@ -474,6 +474,9 @@ function changeColors(e) {
     sbRedLogo.src = `/pages/op-module-teams/img/${e.teams.redTeam.logo}`;
     sbRedLogo.style.visibility = "visible";
   }
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
+  nameSpan.textContent = e.tournamentName
+  resizeText(tournamentDiv)
 
   sbBlueScore.innerHTML = "";
   sbRedScore.innerHTML = "";
@@ -701,6 +704,10 @@ function updateSettings(e) {
     document.querySelector("#tournament").style.display = e.showTournament
       ? "flex"
       : "none";
+  }
+  if (e.showTournament !== showTournament) {
+    showTournament = e.showTournament
+    document.querySelector('#tournament').style.display = e.showTournament ? 'flex' : 'none'
   }
 
   if (showScoreBoard !== e.scoreboard.active) {
@@ -1040,6 +1047,22 @@ function addData(chart, labels, newData) {
   chart.data.labels = labels;
   chart.data.datasets[0].data = newData;
   chart.update();
+}
+
+const isOverflown = ({ clientHeight, scrollHeight, clientWidth, scrollWidth }) => (scrollHeight > clientHeight || scrollWidth > clientWidth)
+
+const resizeText = (parent) => {
+  let i = 20
+  let overflow = false
+  const maxSize = 50
+
+  while (!overflow && i < maxSize) {
+    parent.style.fontSize = `${i}px`
+    overflow = isOverflown(parent)
+    if (!overflow) i++
+  }
+
+  parent.style.fontSize = `${i - 1}px`
 }
 
 LPTE.onready(async () => {
