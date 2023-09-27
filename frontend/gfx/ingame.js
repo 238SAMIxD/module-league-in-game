@@ -429,11 +429,11 @@ const tournamentDiv = document.querySelector('#tournament')
 const roundOfSpan = tournamentDiv.querySelector('.phase')
 const nameSpan = tournamentDiv.querySelector('.name')
 const roundOfMap = {
-  0: 'Upper Bracket Final',
-  1: 'Upper Bracket Final',
-  2: 'Finals',
-  4: 'Semi Finals',
-  8: 'Quarter Finals'
+  0: 'Wielki Finał',
+  1: 'Mały Finał',
+  2: 'Finał',
+  4: 'Półfinał',
+  8: 'Ćwierćfinał'
 }
 
 function changeColors(e) {
@@ -451,7 +451,7 @@ function changeColors(e) {
     sbRedLogo.src = `/pages/op-module-teams/img/${e.teams.redTeam.logo}`
     sbRedLogo.style.visibility = 'visible'
   }
-  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `Round of ${e.roundOf}`
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
   nameSpan.textContent = e.tournamentName
   resizeText(tournamentDiv)
 
