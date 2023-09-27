@@ -1,6 +1,7 @@
 const blueTeam = document.querySelector('#blue')
 const redTeam = document.querySelector('#red')
 let showNicknames,
+  showTournament,
   showLeaderBoard,
   showScoreBoard,
   score,
@@ -427,6 +428,16 @@ function changeColor(color) {
 
 const sbBlueScore = scoreboard.querySelector('.sb-score-blue')
 const sbRedScore = scoreboard.querySelector('.sb-score-red')
+const tournamentDiv = document.querySelector('#tournament')
+const roundOfSpan = tournamentDiv.querySelector('.phase')
+const nameSpan = tournamentDiv.querySelector('.name')
+const roundOfMap = {
+  0: 'Wielki Finał',
+  1: 'Mały Finał',
+  2: 'Finał',
+  4: 'Półfinał',
+  8: 'Ćwierćfinał'
+}
 
 function changeColors(e) {
   teams[100] = e.teams.blueTeam;
@@ -446,6 +457,9 @@ function changeColors(e) {
     sbRedLogo.src = `/pages/op-module-teams/img/${e.teams.redTeam.logo}`
     sbRedLogo.style.visibility = 'visible'
   }
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
+  nameSpan.textContent = e.tournamentName
+  resizeText(tournamentDiv)
 
   sbBlueScore.innerHTML = ''
   sbRedScore.innerHTML = ''
@@ -661,6 +675,10 @@ function updateSettings(e) {
       })
     }
   }
+  if (e.showTournament !== showTournament) {
+    showTournament = e.showTournament
+    document.querySelector('#tournament').style.display = e.showTournament ? 'flex' : 'none'
+  }
 
   if (showScoreBoard !== e.scoreboard.active) {
     showScoreBoard = e.scoreboard.active
@@ -815,6 +833,22 @@ function createLeaderBoardItem(player, max, type = 'xp') {
   lbItem.appendChild(lbMeter)
 
   return lbItem
+}
+
+const isOverflown = ({ clientHeight, scrollHeight, clientWidth, scrollWidth }) => (scrollHeight > clientHeight || scrollWidth > clientWidth)
+
+const resizeText = (parent) => {
+  let i = 20
+  let overflow = false
+  const maxSize = 50
+
+  while (!overflow && i < maxSize) {
+    parent.style.fontSize = `${i}px`
+    overflow = isOverflown(parent)
+    if (!overflow) i++
+  }
+
+  parent.style.fontSize = `${i - 1}px`
 }
 
 LPTE.onready(async () => {
