@@ -33,8 +33,10 @@ function levelUpdate(e) {
     }, 3000)
   }
 
-  levelContainer.innerHTML = e.level
   playerDiv.classList.add('levelUp')
+  setTimeout(() => {
+    levelContainer.innerHTML = e.level
+  }, 1000)
   setTimeout(() => {
     playerDiv.classList.remove('levelUp')
   }, 6000)
