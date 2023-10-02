@@ -385,6 +385,29 @@ body {
   text-transform: uppercase;
 }
 
+.event {
+  position: absolute;
+  bottom: 235px;
+  left: 605px;
+  right: 590px;
+  height: 65px;
+  padding: 5px;
+  background: var(--background-color);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 0 0 1px #3f3321, 0 0 0 3px #524b2d, 0 0 0 4px #716441;
+}
+
+#tournament .content {
+  background: -webkit-linear-gradient(#978867, #464030);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+#tournament .phase {
+  text-transform: uppercase;
+}
+
 .team {
   position: relative;
   top: 154px;
@@ -779,14 +802,19 @@ body {
 .sb-logo {
   width: 50px;
   aspect-ratio: 1;
-  visibility: hidden;
+  object-fit: contain;
+  display: none;
 }
 
 .sb-blue .sb-logo {
-  margin-right: 25px;
+  margin-top: -5px;
+  margin-left: 15px;
+  margin-right: 20px;
 }
 .sb-red .sb-logo {
-  margin-left: 25px;
+  margin-left: 20px;
+  margin-top: -5px;
+  margin-right: 15px;
 }
 
 .sb-score {

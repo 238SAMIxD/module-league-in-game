@@ -453,17 +453,22 @@ function changeColors(e) {
 
   sbBlueTag.innerText = e.teams.blueTeam?.tag || 'Tag'
   sbRedTag.innerText = e.teams.redTeam?.tag || 'Tag'
-  sbBlueLogo.style.visibility = `hidden`
-  sbRedLogo.style.visibility = `hidden`
+  sbBlueLogo.style.display = `none`
+  sbRedLogo.style.display = `none`
   sbBlueStanding.innerText = e.teams.blueTeam?.standing || ''
   sbRedStanding.innerText = e.teams.redTeam?.standing || ''
-  if(e.teams.blueTeam?.logo) {
+
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `Round of ${e.roundOf}`
+  nameSpan.textContent = e.tournamentName
+  resizeText(tournamentDiv)
+
+  if(e.teams.blueTeam?.logo !== undefined && e.teams.blueTeam?.logo !== '') {
     sbBlueLogo.src = `/pages/op-module-teams/img/${e.teams.blueTeam.logo}`
-    sbBlueLogo.style.visibility = 'visible'
+    sbBlueLogo.style.display = 'block'
   }
-  if(e.teams.redTeam?.logo) {
+  if(e.teams.redTeam?.logo !== undefined && e.teams.redTeam?.logo !== '') {
     sbRedLogo.src = `/pages/op-module-teams/img/${e.teams.redTeam.logo}`
-    sbRedLogo.style.visibility = 'visible'
+    sbRedLogo.style.display = 'block'
   }
   roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
   nameSpan.textContent = e.tournamentName
@@ -846,7 +851,7 @@ function createLeaderBoardItem(player, max, type = 'xp') {
 const isOverflown = ({ clientHeight, scrollHeight, clientWidth, scrollWidth }) => (scrollHeight > clientHeight || scrollWidth > clientWidth)
 
 const resizeText = (parent) => {
-  let i = 20
+  let i = 10
   let overflow = false
   const maxSize = 50
 
@@ -969,21 +974,12 @@ LPTE.onready(async () => {
     }
   })
   LPTE.on('module-league-in-game', 'test-event', (e) => {
-    const options = [
-      'Cloud',
-      'Hextech',
-      'Chemtech',
-      'Ocean',
-      'Infernal',
-      'Mountain',
-      'Elder',
-    ];
-      emitEvent({
-        team: e.team,
-        name: e.event,
-        time: 160000,
-        type: e.event === 'Dragon' ? options[Math.floor(Math.random() * options.length)] : e.event
-      })
+    emitEvent({
+      team: e.team,
+      name: e.event,
+      time: 160000,
+      type: e.event
+    })
   })
   LPTE.on('module-league-in-game', 'test-killfeed', (e) => {
     if (e.team === 100) {
