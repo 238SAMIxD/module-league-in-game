@@ -19,6 +19,11 @@ body {
   position: relative;
 }
 
+.team {
+  position: relative;
+  top: 154px;
+}
+
 .player {
   width: 74px;
   height: 71px;
@@ -52,13 +57,25 @@ body {
   align-items: center;
 }
 
+.player-event.itemBuy {
+  transform-origin: center top;
+}
+
 .level {
   display: none;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 50px;
   transform-origin: center;
-  font-size: 50px;
+  font-size: 1px;
   margin-top: 7px;
   line-height: 1;
   transform: translateY(-100%);
+  background-image: url(/pages/op-plugin-theming/active/turniej/logo1.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 
 .levelUp {
@@ -67,28 +84,41 @@ body {
 }
 
 .levelUp .level {
-  display: block;
+  display: flex;
   animation: levelIn 0.4s ease-in 0.05s forwards,
-    levelOut 0.4s ease-in 2.6s forwards;
+    levelOut 0.4s ease-in 3s forwards, fontUp 1s ease-out 1s forwards;
+}
+
+.item,
+.sponsor {
+  object-fit: contain;
+  width: 60px;
+  height: 60px;
+}
+
+.sponsor {
+  position: absolute;
+  transform: scale(0);
 }
 
 .item {
   display: none;
-  object-fit: contain;
-  width: 60px;
-  height: 60px;
   transform: translateY(-100%);
+}
+
+.itemBuy .sponsor {
+  animation: scaleUp 0.4s ease-out 0.4s forwards;
 }
 
 .itemBuy {
   animation: backgroundUp 0.4s ease-out forwards,
-    backgroundDown 0.4s ease-out 3.45s forwards;
+    backgroundDown 0.4s ease-out 5.45s forwards; // 3.45s
 }
 
 .itemBuy .item {
   display: block;
-  animation: levelIn 0.4s ease-in 0.1s forwards,
-    levelOut 0.4s ease-in 3.15s forwards;
+  animation: levelIn 0.4s ease-in 2.1s forwards,
+    levelOut 0.4s ease-in 5.15s forwards;
 }
 
 .player:not(:last-child) {
@@ -178,6 +208,24 @@ body {
   }
 }
 
+@keyframes fontUp {
+  from {
+    font-size: 1px;
+  }
+  to {
+    font-size: 50px;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 #inhibDiv {
   opacity: 1;
   background-image: url(./img/inhibbadge.png);
@@ -207,7 +255,7 @@ body {
   left: 20px;
 }
 #inhibDiv.both #blueSide::after {
-  content: '';
+  content: "";
   height: 135%;
   width: 2px;
   position: absolute;
@@ -314,7 +362,30 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: .5rem;
+  gap: 0.5rem;
+  position: absolute;
+  bottom: 235px;
+  left: 605px;
+  right: 590px;
+  height: 65px;
+  padding: 5px 10px;
+  background: var(--background-color);
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 0 0 1px #3f3321, 0 0 0 3px #524b2d, 0 0 0 4px #716441;
+}
+
+#tournament .content {
+  background: -webkit-linear-gradient(#978867, #464030);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  white-space: nowrap;
+}
+
+#tournament .phase {
+  text-transform: uppercase;
+}
+
+.event {
   position: absolute;
   bottom: 235px;
   left: 605px;
@@ -337,134 +408,9 @@ body {
   text-transform: uppercase;
 }
 
-.event {
-  position: absolute;
-  left: -2px;
-  top: 0;
-  margin-top: -25px;
-  width: 155px;
-  height: 520px;
-  background-color: var(--background-color);
-
-  padding-top: 25px;
-  z-index: 100;
-
-  text-align: center;
-  color: var(--text-color);
-
-  transform: translateX(-200%);
-  transition: transform 1s ease;
-}
-
-.event.show {
-  transform: translateX(0);
-}
-
-.event::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  background: linear-gradient(
-    45deg,
-    var(--blue-team) -25%,
-    rgba(0, 0, 0, 0) 75%
-  );
-  z-index: 0;
-}
-
-.event-name {
-  font-family: var(--primary-font-family);
-  font-size: 50px;
-  position: relative;
-  z-index: 1;
-  text-transform: uppercase;
-}
-
-.event-time {
-  font-family: var(--secondary-font-family);
-  font-size: 20px;
-  position: relative;
-  z-index: 1;
-}
-
-#blue .event-time {
-  color: var(--blue-team);
-}
-
-#red .event-time {
-  color: var(--red-team);
-}
-
-.event-img {
-  position: absolute;
-  left: 0;
-  top: 25%;
-  z-index: 1;
-  transition-delay: 0.1s;
-  transform: translateX(-200%);
-  transition: transform 1s ease;
-}
-
-.event.show .event-img {
-  transform: translateX(0);
-}
-
-.event.herald .event-img {
-  top: 26.65% !important;
-}
-.event.chemtech .event-img {
-  top: 30% !important;
-}
-.event.infernal .event-img {
-  top: 30% !important;
-}
-.event.mountain .event-img {
-  top: 26.5% !important;
-}
-.event.ocean .event-img {
-  top: 0% !important;
-}
-.event.baron .event-img {
-  top: 28% !important;
-}
-
 .team {
   position: relative;
   top: 154px;
-}
-
-#red .event {
-  left: unset;
-  right: -2px;
-  transform: translateX(200%);
-  transition: transform 1s ease;
-}
-
-#red .event.show {
-  transform: translateX(0);
-}
-
-#red .event::after {
-  background: linear-gradient(
-    -45deg,
-    var(--red-team) -25%,
-    rgba(0, 0, 0, 0) 75%
-  );
-}
-
-#red .event-img {
-  left: unset;
-  right: 0;
-  transition-delay: 0.1s;
-  transform: translateX(200%) scale(-1, 1);
-  transition: transform 1s ease;
-}
-
-#red .event.show .event-img {
-  transform: translateX(0) scale(-1, 1);
 }
 
 #killfeed {
@@ -497,7 +443,7 @@ body {
 }
 
 .kill::after {
-  content: '';
+  content: "";
   height: 60px;
   width: 170px;
   position: absolute;
@@ -551,6 +497,64 @@ body {
     transform: translateX(200%);
     opacity: 0;
   }
+}
+
+#event {
+  position: absolute;
+  left: 605px;
+  right: 590px;
+  bottom: 0;
+  height: 230px;
+  background-color: var(--background-color);
+  box-shadow: 0 0 0 1px #3f3321, 0 0 0 3px #524b2d, 0 0 0 4px #716441;
+
+  z-index: 100;
+
+  text-align: center;
+  color: var(--text-color);
+
+  transform: translateY(110%);
+  transition: transform 1s ease;
+
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+}
+
+#event.show {
+  transform: translateY(0);
+}
+
+#event .info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#event .partner {
+  align-self: center;
+  justify-self: center;
+  background: white;
+  max-width: 100%;
+  max-height: 100px;
+}
+
+#event .name {
+  font-family: var(--primary-font-family);
+  font-size: 50px;
+  z-index: 1;
+  text-transform: uppercase;
+}
+
+#event .time {
+  font-family: var(--secondary-font-family);
+  font-size: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+#event video {
+  display: none;
 }
 
 #platings {
@@ -735,7 +739,6 @@ body {
   font-family: var(--secondary-font-family);
 }
 
-
 .sb-team {
   width: 500px;
   height: 62px;
@@ -751,14 +754,22 @@ body {
 .sb-team.sb-blue {
   padding-right: 20px;
   background-color: var(--background-light-color);
-  background: linear-gradient(to right, var(--blue-team), var(--background-light-color) 30%);
+  background: linear-gradient(
+    to right,
+    var(--blue-team),
+    var(--background-light-color) 30%
+  );
 }
 
 .sb-team.sb-red {
   padding-left: 20px;
   flex-direction: row-reverse;
   background-color: var(--background-light-color);
-  background: linear-gradient(to left, var(--red-team), var(--background-light-color) 30%);
+  background: linear-gradient(
+    to left,
+    var(--red-team),
+    var(--background-light-color) 30%
+  );
 }
 
 .sb-team-info {
@@ -876,8 +887,6 @@ body {
   height: 15px;
 }
 
-/* --------------------------------- */
-
 .sb-blue.power-play.hide ~ .sb-blue.sb-team .sb-score {
   left: -25px;
 }
@@ -927,8 +936,13 @@ body {
 .sb-blue.dragon img {
   margin-left: 10px;
 }
+
 .sb-red.dragon img {
   margin-right: 10px;
+}
+
+.sb-red.elder img {
+  margin-left: -25px;
 }
 
 .power-play.dragon img {
@@ -973,7 +987,7 @@ body {
   position: absolute;
   top: 10%;
   transform: translate(-100%, 0);
-  width: 325px;
+  width: 300px;
   background-color: var(--background-color);
   color: var(--text-color);
   padding: 15px 0px;
@@ -1009,7 +1023,7 @@ body {
 
 .lb-name {
   grid-area: 1 / 2 / 2 / 3;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .lb-name,
@@ -1022,7 +1036,7 @@ body {
 .lb-count {
   grid-area: 1 / 3 / 2 / 4;
   text-align: right;
-  font-size :15px;
+  font-size: 15px;
 }
 
 .lb-count thin {
@@ -1052,12 +1066,12 @@ body {
 
 .blue .lb-meter::-webkit-meter-optimum-value,
 .blue .lb-meter::-webkit-meter-suboptimum-value,
-.blue .lb-meter::-webkit-meter-even-less-good-value  {
+.blue .lb-meter::-webkit-meter-even-less-good-value {
   background: var(--blue-team);
 }
 .red .lb-meter::-webkit-meter-optimum-value,
 .red .lb-meter::-webkit-meter-suboptimum-value,
-.red .lb-meter::-webkit-meter-even-less-good-value  {
+.red .lb-meter::-webkit-meter-even-less-good-value {
   background: var(--red-team);
 }
 

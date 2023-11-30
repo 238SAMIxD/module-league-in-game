@@ -34,8 +34,10 @@ function levelUpdate(e) {
     }, 3000)
   }
 
-  levelContainer.innerHTML = e.level
   playerDiv.classList.add('levelUp')
+  setTimeout(() => {
+    levelContainer.innerHTML = e.level
+  }, 1000)
   setTimeout(() => {
     playerDiv.classList.remove('levelUp')
   }, 6000)
@@ -48,6 +50,7 @@ function itemUpdate(e) {
   const playerDiv = team.children[playerId].querySelector('.player-event')
 
   const levelContainer = playerDiv.querySelector('.item')
+  // const partnerImage = playerDiv.querySelector('.partner')
 
   if (
     playerDiv.classList.contains('levelUp') ||
@@ -58,6 +61,7 @@ function itemUpdate(e) {
     }, 3000)
   }
 
+  // partnerImage.src = '/pages/op-plugin-theming/active/turniej/logo5.png';
   levelContainer.src = `/serve/module-league-static/img/item/${e.item}.png`
   playerDiv.classList.add('itemBuy')
   setTimeout(() => {
@@ -268,8 +272,8 @@ function updateGameState(e) {
       return a.experience < b.experience
         ? 1
         : a.experience > b.experience
-          ? -1
-          : 0
+        ? -1
+        : 0
     })
 
     for (const player in state.player) {
@@ -341,7 +345,7 @@ function ppUpdate(e) {
         e.percent
       }%, var(--background-light-color) ${e.percent + 3}%)`
     }
-    if (e.type === 'Dragon') {
+    if(e.type === 'Dragon') {
       image.src = 'img/elder.png'
       teamDiv.classList.add('dragon')
       teamDiv.classList.remove('baron')
@@ -425,14 +429,17 @@ const tournamentDiv = document.querySelector('#tournament')
 const roundOfSpan = tournamentDiv.querySelector('.phase')
 const nameSpan = tournamentDiv.querySelector('.name')
 const roundOfMap = {
-  0: 'Upper Bracket Final',
-  1: 'Upper Bracket Final',
-  2: 'Finals',
-  4: 'Semi Finals',
-  8: 'Quarter Finals'
+  0: 'Wielki Finał',
+  1: 'Mały Finał',
+  2: 'Finał',
+  4: 'Półfinał',
+  8: 'Ćwierćfinał'
 }
 
 function changeColors(e) {
+  teams[100] = e.teams.blueTeam;
+  teams[200] = e.teams.redTeam;
+
   sbBlueTag.innerText = e.teams.blueTeam?.tag || 'Tag'
   sbRedTag.innerText = e.teams.redTeam?.tag || 'Tag'
   sbBlueLogo.style.display = `none`
@@ -440,19 +447,21 @@ function changeColors(e) {
   sbBlueStanding.innerText = e.teams.blueTeam?.standing || ''
   sbRedStanding.innerText = e.teams.redTeam?.standing || ''
 
-  roundOfSpan.textContent =
-    e.roundOf <= 8 ? roundOfMap[e.roundOf] : `Round of ${e.roundOf}`
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `Round of ${e.roundOf}`
   nameSpan.textContent = e.tournamentName
   resizeText(tournamentDiv)
 
-  if (e.teams.blueTeam?.logo !== undefined && e.teams.blueTeam?.logo !== '') {
+  if(e.teams.blueTeam?.logo !== undefined && e.teams.blueTeam?.logo !== '') {
     sbBlueLogo.src = `/pages/op-module-teams/img/${e.teams.blueTeam.logo}`
     sbBlueLogo.style.display = 'block'
   }
-  if (e.teams.redTeam?.logo !== undefined && e.teams.redTeam?.logo !== '') {
+  if(e.teams.redTeam?.logo !== undefined && e.teams.redTeam?.logo !== '') {
     sbRedLogo.src = `/pages/op-module-teams/img/${e.teams.redTeam.logo}`
     sbRedLogo.style.display = 'block'
   }
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
+  nameSpan.textContent = e.tournamentName
+  resizeText(tournamentDiv)
 
   sbBlueScore.innerHTML = ''
   sbRedScore.innerHTML = ''
@@ -524,6 +533,18 @@ function changeColors(e) {
   }
 }
 
+const eventDiv = document.querySelector('#event')
+const teams = {
+  100: {
+    tag: '',
+    name: '',
+  },
+  200: {
+    tag: '',
+    name: '',
+  },
+};
+
 let hasEvent = false
 function emitEvent(e) {
   if (showLeaderBoard) return
@@ -535,19 +556,40 @@ function emitEvent(e) {
   }
 
   hasEvent = true
-  const eventDiv =
-    e.team === 100
-      ? blueTeam.querySelector('.event')
-      : redTeam.querySelector('.event')
 
-  const eventName = eventDiv.querySelector('.event-name')
+  const eventName = eventDiv.querySelector('.name')
   eventName.querySelector('span').innerText = e.name
-  eventDiv.querySelector('.event-time').innerText = `AT ${convertSecsToTime(
+  eventDiv.querySelector('.time').innerText = `AT ${convertSecsToTime(
     e.time
   )}`
-  eventDiv.querySelector('.event-img').src = `img/${e.type.toLowerCase()}.png`
+  eventDiv.querySelector('.partner').src =
+    e.type === 'Baron'
+      ? `/pages/op-plugin-theming/active/turniej/logo8.png`
+      : e.type === 'Herald'
+      ? `/pages/op-plugin-theming/active/turniej/logo7.png`
+      : `/pages/op-plugin-theming/active/turniej/logo6.png`;
+  eventDiv.querySelector('.by').textContent = teams[e.team]?.name;
+
+  const canvas = eventDiv.querySelector('canvas');
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  const video = eventDiv.querySelector('video');
+  video.src = `/pages/op-plugin-theming/active/events/${e.type.toLowerCase()}.webm`;
+  video.addEventListener('play', function () {
+    const $this = this;
+    (function loop() {
+        if (!$this.paused && !$this.ended) {
+          const ratio = (canvas.width / video.videoWidth) * video.videoHeight;
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage($this, -canvas.width * 0.3, 0, canvas.width * 1.5, ratio * 1.5);
+          setTimeout(loop, 1000 / 30);
+        }
+    })();
+  }, 0);
+
 
   eventDiv.classList.add(e.type.toLowerCase(), 'show')
+  video.play()
 
   setTimeout(() => {
     eventDiv.classList.remove('show')
@@ -637,9 +679,7 @@ function updateSettings(e) {
   }
   if (e.showTournament !== showTournament) {
     showTournament = e.showTournament
-    document.querySelector('#tournament').style.display = e.showTournament
-      ? 'flex'
-      : 'none'
+    document.querySelector('#tournament').style.display = e.showTournament ? 'flex' : 'none'
   }
 
   if (showScoreBoard !== e.scoreboard.active) {
@@ -797,12 +837,7 @@ function createLeaderBoardItem(player, max, type = 'xp') {
   return lbItem
 }
 
-const isOverflown = ({
-  clientHeight,
-  scrollHeight,
-  clientWidth,
-  scrollWidth
-}) => scrollHeight > clientHeight || scrollWidth > clientWidth
+const isOverflown = ({ clientHeight, scrollHeight, clientWidth, scrollWidth }) => (scrollHeight > clientHeight || scrollWidth > clientWidth)
 
 const resizeText = (parent) => {
   let i = 10
@@ -817,24 +852,20 @@ const resizeText = (parent) => {
 
   parent.style.fontSize = `${i - 1}px`
 }
-
 function secsToMinutesAndSeconds(secs) {
   const minutes = Math.floor(secs / 60);
   const seconds = (secs - minutes * 60).toFixed(0);
   return minutes + ':' + (seconds < 10 ? '0' : '') + seconds
 }
-
 /**
  * 
  * @param {any[]} array 
  */
 function shrinkArray (array, sliceSize = 30) {
   let newArray = []
-
   if (array.length < sliceSize) {
     sliceSize = array.length
   }
-
   for (i = 0; i < array.length - sliceSize + 1; i += sliceSize) {
     const sum = array
       .slice(i, i + sliceSize) //get the range
@@ -842,10 +873,8 @@ function shrinkArray (array, sliceSize = 30) {
       / sliceSize
     newArray.push(sum)
   }
-
   return newArray
 }
-
 const goldGraphContainer = document.getElementById('gold-graph-container')
 const goldGraph = document.getElementById('gold-graph')
 const gg2D = goldGraph.getContext('2d')
@@ -854,7 +883,6 @@ function showGoldGraph(data) {
   let red = getComputedStyle(document.body).getPropertyValue('--red-team')
   const white = 'rgba(250,250,250,1)'
   const whiteTransparent = 'rgba(250,250,250,0.1)'
-
     // Add new type of chart to chart.js
     Chart.defaults.NegativeTransparentLine = Chart.helpers.clone(
       Chart.defaults.line
@@ -891,11 +919,9 @@ function showGoldGraph(data) {
         return Chart.controllers.line.prototype.update.apply(this, arguments)
       }
     })
-
   const frames = data.goldGraph
   const keys = shrinkArray(Object.keys(frames).map(f => parseInt(f)))
   const values = shrinkArray(Object.values(frames))
-
   const chart = new Chart(gg2D, {
     type: 'NegativeTransparentLine',
     data: {
@@ -954,7 +980,6 @@ function showGoldGraph(data) {
       }
     }
   })
-
   const interval = setInterval(() => {
     if (!goldGraphContainer.classList.contains('hide')) {
       const frames = gameState.goldGraph
@@ -967,7 +992,6 @@ function showGoldGraph(data) {
     }
   }, 30_000);
 }
-
 function addData(chart, labels, newData) {
   chart.data.labels = labels
   chart.data.datasets[0].data = newData
@@ -1056,16 +1080,13 @@ LPTE.onready(async () => {
       }
     } else if (e.team === 200) {
       for (let i = 5; i < 10; i++) {
-        setTimeout(
-          () => {
-            levelUpdate({
-              player: i,
-              level: e.level,
-              team: e.team
-            })
-          },
-          2500 * (i - 5)
-        )
+        setTimeout(() => {
+          levelUpdate({
+            player: i,
+            level: e.level,
+            team: e.team
+          })
+        }, 2500 * (i - 5))
       }
     }
   })
@@ -1083,16 +1104,13 @@ LPTE.onready(async () => {
       }
     } else if (e.team === 200) {
       for (let i = 5; i < 10; i++) {
-        setTimeout(
-          () => {
-            itemUpdate({
-              player: i,
-              item: 3006,
-              team: e.team
-            })
-          },
-          2500 * (i - 5)
-        )
+        setTimeout(() => {
+          itemUpdate({
+            player: i,
+            item: 3006,
+            team: e.team
+          })
+        }, 2500 * (i - 5))
       }
     }
   })
