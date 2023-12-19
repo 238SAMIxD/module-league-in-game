@@ -28,6 +28,7 @@ export class InGameState {
 
     this.gameState = {
       gameTime: 0,
+      currentPlayer: '',
       showLeaderBoard: false,
       towers: {
         100: {
@@ -220,6 +221,34 @@ export class InGameState {
     this.gameData.push(allGameData)
   }
 
+  public handelReplayData(replayData: any): void {
+    if (replayData.selectionName === '' || replayData.selectionName === undefined) return
+
+    setTimeout(() => {
+      if (replayData.selectionName && this.gameState.currentPlayer) return
+
+      this.gameState.currentPlayer = replayData.selectionName
+
+      const playerIndex = this.gameState.player.findIndex(p => p.summonerName === replayData.selectionName)
+
+      if (playerIndex === -1) return
+
+      const firstPlayerIndex = playerIndex < 5 ? playerIndex : playerIndex - 5
+      const secondPlayerIndex = firstPlayerIndex + 5
+
+      this.ctx.LPTE.emit({
+        meta: {
+          namespace: this.namespace,
+          type: 'player-change',
+          version: 1
+        },
+        player1: this.gameState.player[firstPlayerIndex].summonerName,
+        player2: this.gameState.player[secondPlayerIndex].summonerName,
+      })
+      
+    }, this.config.delay / 2)
+  }
+
   public handelFarsightData(farsightData: FarsightData): void {
     if (farsightData.champions === undefined || !Array.isArray(farsightData.champions) || farsightData.champions.length <= 0) return
 
@@ -247,7 +276,7 @@ export class InGameState {
 
     for (const champion of champions) {
       for (const player in this.gameState.player) {
-        if (this.gameState.player[player].summonerName !== champion.displayName && this.gameState.player[player].championName !== champion.name) continue
+        if (this.gameState.player[player].summonerName !== champion.displayName && this.gameState.player[player].championName !== champion.name && this.gameState.player[player].championId !== champion.name) continue
 
         this.gameState.player[player].experience = champion.experience
         this.gameState.player[player].currentGold = champion.currentGold
@@ -679,10 +708,11 @@ export class InGameState {
 
   private checkLevelUpdate(currentPlayerState: Player, id: number) {
     if (this.gameState.player[id] === undefined || currentPlayerState.level <= this.gameState.player[id]?.level) return
-    if (!this.config.level.includes(currentPlayerState.level.toString())) return
 
     this.gameState.player[id].level = currentPlayerState.level
     this.updateState()
+
+    if (!this.config.level.includes(currentPlayerState.level.toString())) return
 
     this.ctx.LPTE.emit({
       meta: {
