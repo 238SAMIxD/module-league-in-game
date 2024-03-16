@@ -133,7 +133,7 @@ function platingsUpdate(e) {
       }
     }
 
-    teamDiv.querySelector('.gold span').innerText = calcK(total * 175)
+    teamDiv.querySelector('.gold span').innerText = calcK(total * 125)
   }
 }
 
