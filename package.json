@@ -1,6 +1,6 @@
 {
     "name": "module-league-in-game",
-    "version": "6.2.2",
+    "version": "6.3.1",
     "description": "Module to display in-game information",
     "author": "RCVolus",
     "license": "MIT",
@@ -20,7 +20,7 @@
     },
     "devDependencies": {
         "@rcv-prod-toolkit/types": "github:rcv-prod-toolkit/types",
-        "typescript": "^5.4.2"
+        "typescript": "^5.5.3"
     },
     "scripts": {
         "build": "tsc"

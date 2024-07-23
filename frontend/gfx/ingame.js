@@ -260,7 +260,7 @@ function updateGameState(e) {
 
       playerGoldDiv.style.transform = `translate(0, ${
         sortedForGold.findIndex(
-          (gp) => gp.summonerName === state.player[player].summonerName
+          (gp) => gp.riotIdGameName === state.player[player].riotIdGameName
         ) * 100
       }%)`
     }
@@ -286,7 +286,7 @@ function updateGameState(e) {
 
       playerXPDiv.style.transform = `translate(0, ${
         sortedForXP.findIndex(
-          (gp) => gp.summonerName === state.player[player].summonerName
+          (gp) => gp.riotIdGameName === state.player[player].riotIdGameName
         ) * 100
       }%)`
     }
@@ -810,7 +810,7 @@ function createLeaderBoardItem(player, max, type = 'xp') {
 
   const lbName = document.createElement('h2')
   lbName.classList.add('lb-name')
-  lbName.innerText = player.summonerName
+  lbName.innerText = player.riotIdGameName
   lbItem.appendChild(lbName)
 
   const lbCount = document.createElement('h2')
