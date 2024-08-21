@@ -31,6 +31,7 @@ module.exports = async (ctx: PluginContext) => {
         active: true,
         barons: true,
         heralds: true,
+        voidgrubs: true,
         score: true,
         standings: true,
         tags: true,

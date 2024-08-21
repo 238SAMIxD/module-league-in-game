@@ -14,6 +14,7 @@ export interface Config {
     standings: boolean
     barons: boolean
     heralds: boolean
+    voidgrubs: boolean
     tower: boolean
   }
 }

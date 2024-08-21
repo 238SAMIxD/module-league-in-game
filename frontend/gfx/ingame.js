@@ -9,6 +9,7 @@ let showNicknames,
   standings,
   barons,
   heralds,
+  voidgrubs,
   tower,
   gameState
 
@@ -153,11 +154,13 @@ const sbRedKills = scoreboard.querySelector('.sb-kills-red')
 
 const sbBlueBaron = sbBlue.querySelector('.sb-baron-blue')
 const sbBlueHerald = sbBlue.querySelector('.sb-herald-blue')
+const sbBlueVoidgrub = sbBlue.querySelector('.sb-voidgrub-blue')
 const sbBlueTower = sbBlue.querySelector('.sb-tower-blue')
 const sbBlueGold = sbBlue.querySelector('.sb-gold-blue')
 
 const sbRedBaron = sbRed.querySelector('.sb-baron-red')
 const sbRedHerald = sbRed.querySelector('.sb-herald-red')
+const sbRedVoidgrub = sbRed.querySelector('.sb-voidgrub-red')
 const sbRedTower = sbRed.querySelector('.sb-tower-red')
 const sbRedGold = sbRed.querySelector('.sb-gold-red')
 
@@ -221,6 +224,13 @@ function updateGameState(e) {
   ).length
   sbRedHerald.innerText = state.objectives[200].filter(
     (o) => o.type === 'OnKillRiftHerald_Spectator'
+  ).length
+  
+  sbBlueVoidgrub.innerText = state.objectives[100].filter(
+    (o) => o.type === 'SRU_Horde'
+  ).length
+  sbRedVoidgrub.innerText = state.objectives[200].filter(
+    (o) => o.type === 'SRU_Horde'
   ).length
 
   for (const [teamId, team] of Object.entries(state.towers)) {
@@ -598,6 +608,8 @@ function addKill(event) {
     source.src = './img/baron-icon.png'
   } else if (event.source === 'Herald') {
     source.src = './img/herald-icon.png'
+  } else if (event.source === 'Voidgrub') {
+    source.src = './img/grub-icon.png'
   } else if (event.source === 'Dragon') {
     source.src = './img/dragon-icon.png'
   } else {
@@ -715,6 +727,19 @@ function updateSettings(e) {
       })
     } else {
       document.querySelectorAll('.sb-herald').forEach((n) => {
+        n.style.display = 'flex'
+      })
+    }
+  }
+
+  if (voidgrubs !== e.scoreboard.voidgrubs) {
+    voidgrubs = e.scoreboard.voidgrubs
+    if (!e.scoreboard.voidgrubs) {
+      document.querySelectorAll('.sb-voidgrub').forEach((n) => {
+        n.style.display = 'none'
+      })
+    } else {
+      document.querySelectorAll('.sb-voidgrub').forEach((n) => {
         n.style.display = 'flex'
       })
     }

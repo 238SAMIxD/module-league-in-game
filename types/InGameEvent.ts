@@ -18,6 +18,7 @@ export type InGameEvent =
 
 export enum EventType {
   DragonKill = 'OnKillDragon_Spectator',
+  VoidGrubKill = 'OnKillVoidgrubs_minion',
   HeraldKill = 'OnKillRiftHerald_Spectator',
   BaronKill = 'OnKillWorm_Spectator',
   StructureKill = 'OnStructureKill',
@@ -33,6 +34,7 @@ export enum MobType {
   InfernalDragon = 'SRU_Dragon_Fire',
   OceanDragon = 'SRU_Dragon_Water',
   MountainDragon = 'SRU_Dragon_Earth',
+  Voidgrub = 'SRU_Horde',
   Herald = 'SRU_Herald',
   Baron = 'SRU_Baron'
 }

@@ -380,6 +380,23 @@ export class InGameState {
           team,
           time
         })
+      } else if (
+        event.eventname === EventType.VoidGrubKill &&
+        this.config.events?.includes('Voidgrubs')
+      ) {
+        this.ctx.LPTE.emit({
+          meta: {
+            namespace: this.namespace,
+            type: 'event',
+            version: 1
+          },
+          name: 'Voidgrub',
+          type: 'Voidgrub',
+          team,
+          time
+        })
+      } else {
+        console.log(event, event.eventname)
       }
     }, this.config.delay)
   }

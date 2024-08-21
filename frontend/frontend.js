@@ -28,6 +28,7 @@ document.querySelector('#settings').addEventListener('submit', (e) => {
       standings: document.querySelector('#scoreboard-standings').checked,
       barons: document.querySelector('#scoreboard-barons').checked,
       heralds: document.querySelector('#scoreboard-heralds').checked,
+      voidgrubs: document.querySelector('#scoreboard-voidgrubs').checked,
       tower: document.querySelector('#scoreboard-tower').checked
     }
   })
@@ -228,6 +229,8 @@ function initSettings(settings) {
     settings.scoreboard.barons
   document.querySelector('#scoreboard-heralds').checked =
     settings.scoreboard.heralds
+  document.querySelector('#scoreboard-voidgrubs').checked =
+    settings.scoreboard.voidgrubs
   document.querySelector('#scoreboard-tower').checked =
     settings.scoreboard.tower
   document.querySelector('#events-test').addEventListener('change', (e) => {
