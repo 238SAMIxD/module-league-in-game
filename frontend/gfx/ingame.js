@@ -455,8 +455,7 @@ function changeColors(e) {
   sbBlueStanding.innerText = e.teams.blueTeam?.standing || "";
   sbRedStanding.innerText = e.teams.redTeam?.standing || "";
 
-  roundOfSpan.textContent =
-    e.roundOf <= 8 ? roundOfMap[e.roundOf] : `Round of ${e.roundOf}`;
+  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
   nameSpan.textContent = e.tournamentName;
   resizeText(tournamentDiv);
 
@@ -476,9 +475,6 @@ function changeColors(e) {
     sbRedLogo.src = `/pages/op-module-teams/img/${e.teams.redTeam.logo}`;
     sbRedLogo.style.visibility = "visible";
   }
-  roundOfSpan.textContent = e.roundOf <= 8 ? roundOfMap[e.roundOf] : `1/${e.roundOf/2} Finału`
-  nameSpan.textContent = e.tournamentName
-  resizeText(tournamentDiv)
 
   sbBlueScore.innerHTML = "";
   sbRedScore.innerHTML = "";
@@ -578,9 +574,6 @@ function emitEvent(e) {
       ? blueTeam.querySelector(".event")
       : redTeam.querySelector(".event");
 
-  const eventName = eventDiv.querySelector(".event-name");
-  eventName.querySelector("span").innerText = e.name;
-  eventDiv.querySelector(".event-time").innerText = `AT ${convertSecsToTime(
   const eventName = eventDiv.querySelector('.name')
   eventName.querySelector('span').innerText = e.name
   eventDiv.querySelector('.time').innerText = `AT ${convertSecsToTime(
@@ -866,27 +859,6 @@ function createLeaderBoardItem(player, max, type = "xp") {
 
   return lbItem;
 }
-
-const isOverflown = ({
-  clientHeight,
-  scrollHeight,
-  clientWidth,
-  scrollWidth,
-}) => scrollHeight > clientHeight || scrollWidth > clientWidth;
-
-const resizeText = (parent) => {
-  let i = 10;
-  let overflow = false;
-  const maxSize = 50;
-
-  while (!overflow && i < maxSize) {
-    parent.style.fontSize = `${i}px`;
-    overflow = isOverflown(parent);
-    if (!overflow) i++;
-  }
-
-  parent.style.fontSize = `${i - 1}px`;
-};
 
 function secsToMinutesAndSeconds(secs) {
   const minutes = Math.floor(secs / 60);
@@ -1200,7 +1172,6 @@ LPTE.onready(async () => {
   LPTE.on("module-league-in-game", "test-event", (e) => {
     emitEvent({
       team: e.team,
-      name: e.event,
       time: 160000,
       type: e.event,
     });
