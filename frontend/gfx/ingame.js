@@ -569,10 +569,7 @@ function emitEvent(e) {
   }
 
   hasEvent = true;
-  const eventDiv =
-    e.team === 100
-      ? blueTeam.querySelector(".event")
-      : redTeam.querySelector(".event");
+  const eventDiv = document.querySelector('#event')
 
   const eventName = eventDiv.querySelector('.name')
   eventName.querySelector('span').innerText = e.name
@@ -1172,6 +1169,7 @@ LPTE.onready(async () => {
   LPTE.on("module-league-in-game", "test-event", (e) => {
     emitEvent({
       team: e.team,
+      name: e.event,
       time: 160000,
       type: e.event,
     });

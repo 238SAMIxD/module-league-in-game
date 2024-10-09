@@ -650,6 +650,7 @@ body {
 }
 
 #event .time {
+  display: none;
   font-family: var(--secondary-font-family);
   font-size: 20px;
   position: relative;
